@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LanguaGo</title>
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f2fbf4;color:#173a24}
+main{max-width:520px;margin:auto;padding:16px}
+header{text-align:center;padding:20px 0}
+h1{margin:0;font-size:34px}
+.card{background:#fff;border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+#streak{font-size:42px;font-weight:800;color:#22a04a}
+#languages{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{border:0;border-radius:14px;padding:12px;font-size:16px;font-weight:600;cursor:pointer;background:#e8f6ec;color:#173a24;width:100%}
+button.active{background:#22a04a;color:#fff}
+#speak{background:#2f7ff6;color:#fff;margin-top:10px}
+#complete{background:#22a04a;color:#fff;margin-top:10px}
+#health{margin-top:10px}
+</style>
+</head>
+<body>
+<main>
+<header><h1>LanguaGo 🦖</h1><p id="dino">Привет! Давай сохраним серию дня!</p></header>
+<section class="card"><h2>Серия дня</h2><div id="streak">0 дней</div><div id="xp">XP: 0</div></section>
+<section class="card"><h2>Выбери язык</h2><div id="languages"></div></section>
+<section class="card"><h2>Урок</h2><div id="lesson"></div><button id="speak">🔊 Прослушать</button><button id="complete">✅ Завершить урок</button></section>
+<section class="card"><h2>Словарь</h2><ul id="dictionary"></ul></section>
+<section class="card"><h2>Здоровый образ жизни</h2><p>Сделай 30-секундную разминку и выпей воды.</p><button id="health">Отметить выполненным</button></section>
+</main>
+<script>
+const languages={de:{name:"Немецкий",flag:"🇩🇪",voice:"de-DE",lessons:[{phrase:"Guten Morgen!",translation:"Доброе утро!"},{phrase:"Ich heiße Anna.",translation:"Меня зовут Анна."}]},en:{name:"Английский",flag:"🇬🇧",voice:"en-US",lessons:[{phrase:"Good morning!",translation:"Доброе утро!"},{phrase:"My name is Anna.",translation:"Меня зовут Анна."}]},es:{name:"Испанский",flag:"🇪🇸",voice:"es-ES",lessons:[{phrase:"¡Buenos días!",translation:"Доброе утро!"},{phrase:"Me llamo Anna.",translation:"Меня зовут Анна."}]},zh:{name:"Китайский",flag:"🇨🇳",voice:"zh-CN",lessons:[{phrase:"早上好！",translation:"Доброе утро!"},{phrase:"我叫安娜。",translation:"Меня зовут Анна."}]}};
+let state=JSON.parse(localStorage.getItem("languago")||'{"streak":0,"xp":0,"words":[],"health":0,"lang":"de"}');
+let current=null;
+function save(){localStorage.setItem("languago",JSON.stringify(state));render()}
+function render(){
+document.getElementById("streak").textContent=state.streak+" дней";
+document.getElementById("xp").textContent="XP: "+state.xp;
+const langs=document.getElementById("languages");langs.innerHTML="";
+for(const[code,lang]of Object.entries(languages)){const b=document.createElement("button");b.textContent=lang.flag+" "+lang.name;b.onclick=()=>{state.lang=code;save()};if(state.lang===code)b.classList.add("active");langs.appendChild(b)}
+current=languages[state.lang].lessons[0];
+document.getElementById("lesson").innerHTML="<strong>"+current.phrase+"</strong><br>"+current.translation;
+const dict=document.getElementById("dictionary");dict.innerHTML=state.words.length?"":"<li>Словарь пока пустой.</li>";
+state.words.forEach(w=>{const li=document.createElement("li");li.textContent=w.phrase+" — "+w.translation;dict.appendChild(li)})}
+document.getElementById("speak").onclick=()=>{const u=new SpeechSynthesisUtterance(current.phrase);u.lang=languages[state.lang].voice;speechSynthesis.speak(u)};
+document.getElementById("complete").onclick=()=>{state.streak+=1;state.xp+=20;if(!state.words.some(w=>w.phrase===current.phrase))state.words.push(current);document.getElementById("dino").textContent="Супер! Серия сохранена! 🦖";save()};
+document.getElementById("health").onclick=()=>{state.health+=1;state.xp+=5;document.getElementById("health").textContent="Готово! Молодец!";save()};
+render();
+</script>
+</body>
+</html>
