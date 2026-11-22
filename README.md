@@ -1,20 +1,27 @@
 # LanguaGo
 
-iOS language-learning app concept built with SwiftUI.
+LanguaGo — iOS-приложение для изучения немецкого, английского, испанского и китайского языков.
 
-## Features
+## Возможности
 
-- Daily streak
-- German, English, Spanish, and Chinese
-- Audio pronunciation
-- Dino mascot
-- Personal dictionary
-- Healthy-habit breaks
+- Ежедневная серия занятий
+- Уроки для немецкого, английского, испанского и китайского
+- Озвучивание фраз через системный синтезатор речи
+- Персональный словарь и повторение слов
+- Персонаж Дино-завр
+- Напоминания о воде и разминке
+- Сохранение прогресса на устройстве
 
-## Run
+## Быстрый старт
 
-1. Open `LanguaGo.xcodeproj` in Xcode.
-2. Select an iPhone simulator.
-3. Press Run.
+1. Установите Xcode 16 или новее.
+2. Склонируйте репозиторий.
+3. В Xcode создайте новый iOS App project с названием `LanguaGo`, Bundle Identifier например `com.yourname.languago`.
+4. Добавьте файлы из папки `LanguaGo` в проект.
+5. Выберите iPhone-симулятор и нажмите Run.
 
-This repository contains a SwiftUI starter; add an Xcode project file, app icons, audio assets, and App Store configuration before release.
+Подробности — в [SETUP.md](SETUP.md).
+
+## Важно
+
+Этот репозиторий содержит исходный код. Для публикации в App Store нужны Apple Developer Program, Xcode, сборка приложения и проверка Apple.

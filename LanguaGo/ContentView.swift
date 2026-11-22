@@ -1,18 +1,23 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var state = AppState()
+    @EnvironmentObject private var store: ProgressStore
 
     var body: some View {
         TabView {
-            HomeView(state: state)
+            HomeView()
                 .tabItem {
                     Label("Главная", systemImage: "house.fill")
                 }
 
-            DictionaryView(state: state)
+            DictionaryView()
                 .tabItem {
                     Label("Словарь", systemImage: "book.fill")
+                }
+
+            ProfileView()
+                .tabItem {
+                    Label("Профиль", systemImage: "person.fill")
                 }
         }
     }

@@ -1,6 +1,6 @@
 import Foundation
 
-enum Language: String, CaseIterable, Identifiable {
+enum Language: String, CaseIterable, Codable, Identifiable {
     case german = "Немецкий"
     case english = "Английский"
     case spanish = "Испанский"
@@ -10,43 +10,46 @@ enum Language: String, CaseIterable, Identifiable {
 
     var code: String {
         switch self {
-        case .german: return "de"
-        case .english: return "en"
-        case .spanish: return "es"
-        case .chinese: return "zh"
+        case .german: return "de-DE"
+        case .english: return "en-US"
+        case .spanish: return "es-ES"
+        case .chinese: return "zh-CN"
+        }
+    }
+
+    var flag: String {
+        switch self {
+        case .german: return "🇩🇪"
+        case .english: return "🇬🇧"
+        case .spanish: return "🇪🇸"
+        case .chinese: return "🇨🇳"
         }
     }
 }
 
-struct VocabularyWord: Identifiable, Codable {
+struct VocabularyWord: Identifiable, Codable, Hashable {
     var id = UUID()
     var language: Language
     var original: String
     var translation: String
     var example: String
+    var reviewCount = 0
     var isLearned = false
 }
 
-struct Lesson: Identifiable {
+struct Lesson: Identifiable, Codable, Hashable {
     var id = UUID()
     var language: Language
     var title: String
     var phrase: String
     var translation: String
+    var example: String
 }
 
-final class AppState: ObservableObject {
-    @Published var selectedLanguage: Language = .german
-    @Published var streak = 0
-    @Published var xp = 0
-    @Published var words: [VocabularyWord] = []
-
-    func completeLesson() {
-        streak += 1
-        xp += 20
-    }
-
-    func addWord(_ word: VocabularyWord) {
-        words.append(word)
-    }
+struct UserProfile: Codable {
+    var streak = 0
+    var xp = 0
+    var lastLessonDate: Date?
+    var words: [VocabularyWord] = []
+    var healthBreaksCompleted = 0
 }

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HealthBreakView: View {
+    @EnvironmentObject private var store: ProgressStore
     @State private var completed = false
 
     var body: some View {
@@ -11,8 +12,11 @@ struct HealthBreakView: View {
             Text("Сделай 30-секундную разминку и выпей воды.")
                 .foregroundStyle(.secondary)
 
-            Button(completed ? "Готово! Молодец!" : "Отметить выполненным") {
+            Button {
+                store.completeHealthBreak()
                 completed = true
+            } label: {
+                Label(completed ? "Готово! Молодец!" : "Отметить выполненным", systemImage: completed ? "checkmark.circle.fill" : "circle")
             }
             .buttonStyle(.bordered)
             .disabled(completed)

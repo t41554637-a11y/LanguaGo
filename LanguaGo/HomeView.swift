@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct HomeView: View {
-    @ObservedObject var state: AppState
-    @State private var currentLesson: Lesson?
+    @EnvironmentObject private var store: ProgressStore
+    @State private var selectedLesson: Lesson?
 
     var body: some View {
         NavigationStack {
@@ -10,57 +10,67 @@ struct HomeView: View {
                 VStack(spacing: 20) {
                     DinoView(message: "Привет! Давай сохраним серию дня!")
 
-                    VStack(spacing: 8) {
-                        Text("Серия дня")
-                            .font(.headline)
-                        Text("\(state.streak) дней")
-                            .font(.largeTitle.bold())
-                        Text("XP: \(state.xp)")
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(.green.opacity(0.15), in: RoundedRectangle(cornerRadius: 20))
-
-                    Picker("Язык", selection: $state.selectedLanguage) {
-                        ForEach(Language.allCases) { language in
-                            Text(language.rawValue).tag(language)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-
-                    Button {
-                        currentLesson = Lesson(
-                            language: state.selectedLanguage,
-                            title: "Урок дня",
-                            phrase: samplePhrase(for: state.selectedLanguage).0,
-                            translation: samplePhrase(for: state.selectedLanguage).1
-                        )
-                    } label: {
-                        Label("Начать урок", systemImage: "play.fill")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.green, in: RoundedRectangle(cornerRadius: 16))
-                            .foregroundStyle(.white)
-                    }
-
+                    streakCard
+                    languagePicker
+                    lessonList
                     HealthBreakView()
                 }
                 .padding()
             }
             .navigationTitle("LanguaGo")
-            .navigationDestination(item: $currentLesson) { lesson in
-                LessonView(state: state, lesson: lesson)
+            .navigationDestination(item: $selectedLesson) { lesson in
+                LessonView(lesson: lesson)
             }
         }
     }
 
-    private func samplePhrase(for language: Language) -> (String, String) {
-        switch language {
-        case .german: return ("Guten Morgen!", "Доброе утро!")
-        case .english: return ("Good morning!", "Доброе утро!")
-        case .spanish: return ("¡Buenos días!", "Доброе утро!")
-        case .chinese: return ("早上好！", "Доброе утро!")
+    private var streakCard: some View {
+        VStack(spacing: 8) {
+            Text("Серия дня")
+                .font(.headline)
+            Text("\(store.profile.streak) дней")
+                .font(.system(size: 44, weight: .bold))
+            Text("XP: \(store.profile.xp) · Слов: \(store.profile.words.count)")
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(.green.opacity(0.15), in: RoundedRectangle(cornerRadius: 24))
+    }
+
+    private var languagePicker: some View {
+        Picker("Язык", selection: $store.selectedLanguage) {
+            ForEach(Language.allCases) { language in
+                Text("\(language.flag) \(language.rawValue)").tag(language)
+            }
+        }
+        .pickerStyle(.segmented)
+    }
+
+    private var lessonList: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Уроки")
+                .font(.headline)
+
+            ForEach(LessonContent.lessons(for: store.selectedLanguage)) { lesson in
+                Button {
+                    selectedLesson = lesson
+                } label: {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(lesson.title)
+                                .font(.headline)
+                            Text(lesson.phrase)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                    }
+                    .padding()
+                    .background(.background.secondary, in: RoundedRectangle(cornerRadius: 16))
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 }

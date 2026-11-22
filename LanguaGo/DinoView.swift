@@ -4,7 +4,7 @@ struct DinoView: View {
     let message: String
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(alignment: .top, spacing: 16) {
             Text("🦖")
                 .font(.system(size: 56))
 
