@@ -1,0 +1,13 @@
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f2fbf4;color:#173a24}
+main{max-width:520px;margin:auto;padding:16px}
+header{text-align:center;padding:24px 0}
+h1{margin:0;font-size:34px}
+.card{background:#fff;border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+#streak{font-size:42px;font-weight:800;color:#22a04a}
+#languages{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{border:0;border-radius:14px;padding:12px;font-size:16px;font-weight:600;cursor:pointer;background:#e8f6ec;color:#173a24}
+button.active{background:#22a04a;color:#fff}
+#speak,#complete,#health{width:100%;margin-top:10px}
+#speak{background:#2f7ff6;color:#fff}
+#complete{background:#22a04a;color:#fff}
+#dictionary{padding-left:20px}
